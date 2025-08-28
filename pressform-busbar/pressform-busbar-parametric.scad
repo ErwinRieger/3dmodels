@@ -37,7 +37,7 @@ ueberstand = 10.0; // [0.0:0.1:50]
 // 3d Druck Anordnung
 for_print = false;
 
-// Debug, blech länge im gebogenen zustand
+// Debug, busbar einblenden
 debug = true;
 
 /* [Hidden] */
@@ -49,7 +49,6 @@ tolhalbe = toleranz / 2;
 
 dinner_ut = blechdicke * 4;
 douter_ut = dinner_ut+blechdicke;
-dmid = (dinner_ut + blechdicke)/2 + (douter_ut + blechdicke)/2;
 
 dinner_ot = dinner_ut - blechdicke - toleranz;
 douter_ot = dinner_ut + 2*(blechdicke + toleranz);
@@ -58,10 +57,11 @@ h = hbuegel - dinner_ut/2;
 l = (abstandbolzen - dinner_ut - douter_ut)/2;
 echo(h=h, l=l);
 
-lblech0 = 2 * (ueberstand + l + dmid*PI/2 + h); // ausgangs-länge blech 
+u = ((dinner_ut + blechdicke/2) + (douter_ut + blechdicke/2))*PI/4;
+lblech0 = 2 * (ueberstand + l + u + h); // ausgangs-länge blech 
 laenge_gebogen=abstandbolzen + 2*ueberstand;
 
-echo(dinner_ut=dinner_ut, douter_ut=douter_ut, dmid=dmid);
+echo(dinner_ut=dinner_ut, douter_ut=douter_ut, u=u);
 echo(blechdicke=blechdicke, mit_toleranz=blechdicke+toleranz);
 echo(abstandbolzen=abstandbolzen, breite=breite);
 echo(laenge_blech=lblech0, laenge_gebogen=laenge_gebogen);
