@@ -143,9 +143,10 @@ module upperbusbar0() {
             rotate([0, 0, 180])
                 rundung(dr=dinner_ot);
 
+        // führungsnut
         translate([lblech0/2, 0, breite/2])
           rotate([-90, 0])
-            cylinder(d=10*lw+0.5, h=50);
+            cylinder(d=10*lw+0.5, h=hupper+0.1);
 
         // bohrungen
         translate([abstandbolzen/2, 0, breite/2])
