@@ -99,13 +99,14 @@ module lowerbusbar0(mitnase) {
     translate([lblech0/2+0.5, -(hboden+h)])
         cube([5*lw, hseit, breite]);
 
+    // seitliche führung
     if (mitnase) {
         translate([lblech0/2+0.5, -hseit+dinner_ut/2+5, breite/2])
           rotate([-90, 0])
             difference() {
               cylinder(d=10*lw, h=hseit);
               translate([-5*lw, -breite/2])
-                cube([5*lw, breite, hseit-5]);
+                cube([5*lw, breite, hseit-max(hseit*0.2, 5)]);
             }
     }
 }
