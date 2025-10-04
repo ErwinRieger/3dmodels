@@ -37,6 +37,9 @@ ueberstand = 10.0; // [0.0:0.1:50]
 // 3d Druck Anordnung
 for_print = false;
 
+// Label mit lBlech x hBuegel x Breite erzeugen
+mit_label = false;
+
 // Debug, busbar einblenden
 debug = true;
 
@@ -180,12 +183,16 @@ module upperbusbar0() {
 module upperbusbar() {
 
     difference() {
-        union() {
-            upperbusbar0();
-            mirror([1, 0])
-                upperbusbar0();
+        upperbusbar0();
+        if (mit_label) {
+            // beschriftung
+            translate([lw5, hbuegel, breite-1.5+0.001])
+            linear_extrude(height = 1.5)
+                text(str(round(lblech0), "x", hbuegel, "x", breite), size = 7.5, font = "Liberation Sans");
         }
     }
+    mirror([1, 0])
+        upperbusbar0();
 }
 
 
