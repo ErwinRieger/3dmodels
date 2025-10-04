@@ -18,7 +18,7 @@
 blechdicke = 2.0; // [1.0:0.1:5.0]
 
 // Höhe des bügels
-hbuegel = 15; // [10:50]
+hbuegel = 15; // [10:75]
 
 // Eve 280k ist 72mm dick, plus 0.5mm isolierplatte = 72.5
 // Abstand bolzen zelle
