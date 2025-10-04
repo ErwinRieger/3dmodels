@@ -69,11 +69,15 @@ echo(querschnitt1=breite*blechdicke);
 
 lw = 0.8;
 
-hboden = 7*lw;
-hupper = 10*lw+hbuegel;
+lw5 = max(5*lw, 3*blechdicke);
+lw7 = max(7*lw, 4*blechdicke);
+lw10 = max(10*lw, 5*blechdicke);
+
+hboden = lw7;
+hupper = lw10+hbuegel;
 hseit = hboden + hbuegel + 5;
 
-module rundung(dr) {
+module rundung(dr, breite) {
     difference(){
         cube([dr/2, dr/2, breite]);
         cylinder(d=dr, h=breite+0.001);
@@ -82,32 +86,46 @@ module rundung(dr) {
 
 module lowerbusbar0(mitnase) {
 
-    hull() {
-        cylinder(d=dinner_ut, h=breite);
+    br = 0.5 + lw5;
+    blb = breite + br;
+
+    translate([0, 0, -br]) {
+      hull() {
+        cylinder(d=dinner_ut, h=blb);
         translate([-dinner_ut/2, -h])
-           cube([dinner_ut, 1, breite]);
-    }
+           cube([dinner_ut, 1, blb]);
+      }
+
     translate([0, -(h + hboden)])
-        cube([lblech0/2, hboden, breite]);
+        cube([lblech0/2, hboden, blb]);
     translate([dinner_ut/2+douter_ut/2, -h+douter_ut/2])
         rotate([0, 0, 180])
-            rundung(dr=douter_ut);
+            rundung(dr=douter_ut, breite=blb);
 
     // seitlicher anschlag
     translate([lblech0/2, -(hboden+h)])
-        cube([0.5, hboden, breite]);
+        cube([0.5, hboden, blb]);
     translate([lblech0/2+0.5, -(hboden+h)])
-        cube([5*lw, hseit, breite]);
+        cube([lw5, hseit, blb]);
 
     // seitliche führung
     if (mitnase) {
-        translate([lblech0/2+0.5, -hseit+dinner_ut/2+5, breite/2])
+        translate([lblech0/2+0.5, -hseit+dinner_ut/2+5, breite/2+br])
           rotate([-90, 0])
             difference() {
-              cylinder(d=10*lw, h=hseit);
-              translate([-5*lw, -breite/2])
-                cube([5*lw, breite, hseit-max(hseit*0.2, 5)]);
+              cylinder(d=lw10, h=hseit);
+              translate([-lw5, -breite/2])
+                cube([lw5, breite, hseit-max(hseit*0.2, 5)]);
             }
+
+        translate([0, -(h + hboden)])
+           linear_extrude(height = lw5, center = false, convexity = 10)
+                polygon( points=[
+                            [0,0],
+                            [lblech0/2+0.5,0],
+                            [lblech0/2+0.5, hseit],
+                            ]);
+       }
     }
 }
 
@@ -119,14 +137,14 @@ module lowerbusbar(mitnase=true) {
 
 module lowerbusbarmitrand() {
     lowerbusbar();
-    translate([0, 0, -3.5]) {
-        scale([1, 1, 3.5/breite])
-            lowerbusbar(false);
-        translate([lblech0/2+0.5-10, -(hboden+h)])
-            cube([10+5*lw, hseit, 3]);
-        translate([-lblech0/2-0.5, -(hboden+h)])
-            cube([10+5*lw, hseit, 3]);
-    }
+    // translate([0, 0, -3.5]) {
+        // scale([1, 1, 3.5/breite])
+            // lowerbusbar(false);
+        // translate([lblech0/2+0.5-10, -(hboden+h)])
+            // cube([10+lw5, hseit, 3]);
+        // translate([-lblech0/2-0.5, -(hboden+h)])
+            // cube([10+lw5, hseit, 3]);
+    // }
 }
 
 module upperbusbar0() {
@@ -142,12 +160,12 @@ module upperbusbar0() {
             }
         translate([dinner_ot/2 + douter_ot/2, dinner_ot/2])
             rotate([0, 0, 180])
-                rundung(dr=dinner_ot);
+                rundung(dr=dinner_ot, breite=breite);
 
         // führungsnut
         translate([lblech0/2, 0, breite/2])
           rotate([-90, 0])
-            cylinder(d=10*lw+0.5, h=hupper+0.1);
+            cylinder(d=lw10+0.5, h=hupper+0.1);
 
         // bohrungen
         translate([abstandbolzen/2, 0, breite/2])
@@ -217,7 +235,7 @@ lowerbusbarmitrand();
 
 if (for_print) {
     // für druck
-    translate([0, hseit/2+5, -3.5])
+    translate([0, hseit/2+5, -(lw5+0.5)])
         upperbusbar();
 }
 else {
